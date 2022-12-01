@@ -13,7 +13,8 @@ lazy_static! {
     static ref CLIENT: Client = {
         let jar = std::sync::Arc::new(Jar::default());
         jar.add_cookie_str(
-            var("AOC_SESSION").unwrap().as_str(),
+        // set this env var by curling or something
+            var("AOC_COOKIE").expect("failed to load AOC_COOKIE").as_str(),
             &"https://adventofcode.com".parse::<Url>().unwrap());
         Client::builder()
         .timeout(Duration::from_secs(5))
@@ -22,7 +23,6 @@ lazy_static! {
         .build()
         .unwrap()
         };
-        // set this env var by curling or something
 }
 
 pub fn input(day: &str) -> Result<String, Error> {

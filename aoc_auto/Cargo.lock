@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "aoc-auto"
+name = "aoc_auto"
 version = "0.0.1"
 dependencies = [
  "lazy_static",

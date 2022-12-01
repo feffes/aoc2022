@@ -67,7 +67,8 @@ impl PartialEq for Elf {
 }
 
 fn main() {
-    let input = std::fs::read_to_string("input").expect("Couldn't read input file");
+    let input = aoc_auto::input("1").unwrap();
+    //let input = std::fs::read_to_string("input").expect("Couldn't read input file");
     let mut best_elves: BestPile<Elf> = BestPile::new(3);
     let mut elf = Elf::default();
     for line in input.lines() {
