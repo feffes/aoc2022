@@ -3,28 +3,27 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 
 struct BestPile<T: Ord> {
-    pile: BinaryHeap<T>,
+    pile: BinaryHeap<Reverse<T>>,
     pile_size: usize,
 }
 
 impl<T: Ord> BestPile<T> {
     fn new(pile_size: usize) -> BestPile<T> {
-        BestPile {
-            pile: BinaryHeap::new(),
-            pile_size,
-        }
+        let pile: BinaryHeap<Reverse<T>> = BinaryHeap::new();
+        BestPile { pile, pile_size }
     }
 
     fn push(&mut self, item: T) {
+        let rev = Reverse(item);
         if self.pile.len() >= self.pile_size {
             if let Some(highest) = self.pile.peek() {
-                if highest > &item {
+                if highest > &rev {
                     self.pile.pop();
-                    self.pile.push(item);
+                    self.pile.push(rev);
                 }
             }
         } else {
-            self.pile.push(item);
+            self.pile.push(rev);
         }
     }
 }
@@ -69,11 +68,11 @@ impl PartialEq for Elf {
 
 fn main() {
     let input = std::fs::read_to_string("input").expect("Couldn't read input file");
-    let mut best_elves: BestPile<Reverse<Elf>> = BestPile::new(3);
+    let mut best_elves: BestPile<Elf> = BestPile::new(3);
     let mut elf = Elf::default();
     for line in input.lines() {
         if line.is_empty() {
-            best_elves.push(Reverse(elf.clone()));
+            best_elves.push(elf.clone());
             elf = Elf::default();
         } else if let Ok(num) = line.parse::<u64>() {
             elf.push(num);
