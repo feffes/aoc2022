@@ -35,7 +35,7 @@ struct Elf {
 
 impl Elf {
     fn total(&self) -> u64 {
-        self.food.iter().fold(0, |prev, val| prev + val)
+        self.food.iter().sum()
     }
     fn push(&mut self, val: u64) {
         self.food.push(val);
