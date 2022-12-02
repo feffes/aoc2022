@@ -9,26 +9,28 @@ enum RPS {
     Scissors,
 }
 
+impl From<&str> for RPS {
+    fn from(value: &str) -> Self {
+        match value {
+            "A" | "X" => Rock,
+            "B" | "Y" => Paper,
+            "C" | "Z" => Scissors,
+            _ => panic!(),
+        }
+    }
+}
+
 fn main() {
     let input = aoc_auto::input("2").unwrap();
     //    let mut split = input.lines().map(|s| s.split_whitespace());
     let mut split = input.split_whitespace();
     let mut result = 0;
     while let (Some(l), Some(r)) = (split.next(), split.next()) {
-        let (left, right) = (char_to_rps(l), char_to_rps(r));
+        let (left, right): (RPS, RPS) = (l.into(), r.into());
         // result += simulate(left, right);
         result += simulate_2(left, right);
     }
     println!("{}", result);
-}
-
-fn char_to_rps(input: &str) -> RPS {
-    match input {
-        "A" | "X" => Rock,
-        "B" | "Y" => Paper,
-        "C" | "Z" => Scissors,
-        _ => panic!(),
-    }
 }
 
 // return right side's score for the round
