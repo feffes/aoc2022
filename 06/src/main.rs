@@ -9,7 +9,7 @@ use itertools::Itertools;
 fn main() {
     let input = aoc_auto::input("6").unwrap();
     // first window = "abcd", enumerate 0, second is bcde, enumerate 1, 4+i
-    for (i, w) in input.chars().collect::<Vec<char>>().windows(14).enumerate() {
+    for (i, w) in input.as_bytes().windows(14).enumerate() {
         println!("processing {:?}", w);
         // if w.iter().duplicates().count() == 0 {
         //     println!("{}", i + 4);
