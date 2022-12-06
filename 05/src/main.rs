@@ -15,33 +15,11 @@ struct Move {
 }
 
 impl Move {
-    fn execute(&self, mut stack: VecDeque<VecDeque<char>>) -> VecDeque<VecDeque<char>> {
-        // let Some(from) = stack.get_mut(self.from - 1) else {panic!();};
-        // let Some(to) = stack.get_mut(self.to - 1) else {panic!();};
-        // stack.make_contiguous();
-        // let mut from = &stack.as_mut_slices().0[self.from - 1];
-        // let mut to = &stack.as_mut_slices().0[self.to - 1];
-        // let Some(from) = stack.get_mut(self.from - 1) else {panic!();};
-        // let Some(to) = stack.get_mut(self.to - 1) else {panic!();};
-
-        let mut from = stack[self.from - 1].clone();
-        let mut to = stack[self.to - 1].clone();
-
-        for item in from.drain(0..self.count).rev() {
-            to.push_front(item);
+    fn execute(&self, stack: &mut VecDeque<VecDeque<char>>) {
+        let drained: VecDeque<char> = stack[self.from].drain(0..self.count).rev().collect();
+        for item in drained.iter() {
+            stack[self.to].push_front(*item);
         }
-        stack[self.from - 1] = from;
-        stack[self.to - 1] = to;
-
-        // for _ in 0..self.count {
-        //     let Some(item) = stack[self.from - 1].pop_front() else {
-        //         panic!();
-        //         //return stack;
-        //     };
-        //     stack[self.to - 1].push_front(item);
-        //     println!("executing {:?}", self);
-        // }
-        stack
     }
 }
 
@@ -64,7 +42,7 @@ fn main() {
         .map(|s| move_parser(s).unwrap().1)
         .collect();
     for m in moves {
-        stacks = m.execute(stacks.into());
+        m.execute(&mut stacks);
     }
     println!("");
     for s in stacks {
@@ -100,7 +78,7 @@ move 1 from 1 to 2";
         .collect();
     for m in moves {
         println!("{:?}", m);
-        stacks = m.execute(stacks);
+        m.execute(&mut stacks);
     }
     assert_eq!(stacks, expected);
 }
@@ -110,8 +88,8 @@ fn move_parser(s: &str) -> IResult<&str, Move> {
         preceded(tag("move "), pair(u32, from_to_parser)),
         |(count, (from, to))| Move {
             count: count as usize,
-            from: from as usize,
-            to: to as usize,
+            from: from as usize - 1,
+            to: to as usize - 1,
         },
     )(s)
 }
